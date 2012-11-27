@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#location of HPL 
+HPL_DIR=/home/mfatica/hpl-2.0_FERMI_v15
+
+# Number of CPU cores ( per GPU used = per MPI process )
+CPU_CORES_PER_GPU=4
+
+# FOR MKL
+export MKL_NUM_THREADS=$CPU_CORES_PER_GPU
+# FOR GOTO
+export GOTO_NUM_THREADS=$CPU_CORES_PER_GPU
+# FOR OMP
+export OMP_NUM_THREADS=$CPU_CORES_PER_GPU
+
+export MKL_DYNAMIC=FALSE
+
+# hint: for 2050 or 2070 card
+#       try 350/(350 + MKL_NUM_THREADS*4*cpu frequency in GHz) 
+export CUDA_DGEMM_SPLIT=0.80
+
+# hint: try CUDA_DGEMM_SPLIT - 0.10
+export CUDA_DTRSM_SPLIT=0.70
+
+export LD_LIBRARY_PATH=$HPL_DIR/src/cuda:$LD_LIBRARY_PATH
+
+$HPL_DIR/bin/CUDA/xhpl
